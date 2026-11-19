@@ -96,7 +96,7 @@ function setupCustomDropdown(selectId,prefix){
   const node=nodes[activeIndex];
   node.focus({preventScroll:true});
   /* Scroll only the popup itself when using arrow keys, never the page. */
-  const y=node.offsetTop-menu.offsetTop;
+  const y=node.offsetTop;
   if(y<menu.scrollTop)menu.scrollTop=y;
   else if(y+node.offsetHeight>menu.scrollTop+menu.clientHeight)
    menu.scrollTop=y+node.offsetHeight-menu.clientHeight;
