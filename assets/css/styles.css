@@ -66,9 +66,9 @@
 }
 
 /* 1.4 — stronger collection state and a distinct, keyboard-accessible checkbox */
-.card{border-width:2px;transition:border-color .18s,transform .18s,background .18s,box-shadow .18s}
-.card.found{border-color:#a5edb3;background:linear-gradient(145deg,#28452f,#1a3024);box-shadow:0 0 0 1px #69b77d88,0 0 19px #79d59336}
-.card.found:hover{border-color:#c8ffd0;box-shadow:0 0 0 1px #85d99a,0 0 24px #8ae5a34b}
+.card{border-width:1px;transition:border-color .18s,transform .18s,background .18s,box-shadow .18s}
+.card.found{border-color:#a5edb3;background:linear-gradient(145deg,#28452f,#1a3024);box-shadow:inset 0 0 0 1px #a5edb3,0 0 19px #79d59336}
+.card.found:hover{border-color:#c8ffd0;box-shadow:inset 0 0 0 1px #c8ffd0,0 0 24px #8ae5a34b}
 .card .status-icon{
  position:absolute;top:8px;right:8px;z-index:3;display:flex;align-items:center;justify-content:center;
  width:32px;height:32px;min-width:32px;padding:0;
