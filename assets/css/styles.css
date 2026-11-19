@@ -87,3 +87,97 @@
 .drop-explain details{margin-top:9px}
 .drop-explain summary{color:#e7d5ae;cursor:pointer;list-style-position:inside;font-weight:650}
 .drop-explain details a{display:inline-block;margin-top:8px}
+
+/* v1.5: more legible, smoothly eased interactions — no layout shifts */
+:root{--ui-ease:cubic-bezier(.22,1,.36,1)}
+.btn{
+ background:#27342b;
+ transition:transform 300ms var(--ui-ease),background-color 270ms ease,border-color 270ms ease,box-shadow 300ms var(--ui-ease);
+}
+.btn.primary{background:#d9b87d}
+.btn.quiet{background:#19231f}
+.btn:hover{background:#384c3b;transform:translateY(-3px);box-shadow:0 8px 17px #0005;border-color:var(--gold)}
+.btn.primary:hover{background:#efce93;box-shadow:0 8px 22px #d4b67a3b}
+.btn.quiet:hover{background:#2d3e32}
+.collect,.info,.tab,.card .status-icon,.modal button.close{
+ transition:transform 300ms var(--ui-ease),background-color 270ms ease,border-color 270ms ease,box-shadow 300ms var(--ui-ease),color 270ms ease;
+}
+.collect:hover,.info:hover,.tab:hover,.card .status-icon:hover,.modal button.close:hover{
+ transform:translateY(-2px);
+ box-shadow:0 6px 14px #0005;
+}
+.collect:hover{background:#37543b;border-color:#8caf86}
+.card.found .collect:hover{background:#709575;border-color:#a8d2a5}
+.info:hover{background:#2a3b2f;border-color:#b9c9a6}
+.tab:hover{background:#29392c;color:#f7ead1}
+.tab[aria-pressed=true]:hover{background:#5d7149}
+.card{
+ transition:transform 340ms var(--ui-ease),border-color 300ms ease,background-color 300ms ease,box-shadow 340ms var(--ui-ease);
+}
+.card:hover{transform:translateY(-4px);box-shadow:0 12px 24px #0006}
+.card.found:hover{
+ background:linear-gradient(145deg,#28452f,#1a3024);
+ box-shadow:inset 0 0 0 1px #c8ffd0,0 10px 22px #0005,0 0 25px #8ae5a34b;
+}
+.art img{transition:transform 340ms var(--ui-ease),filter 300ms ease,opacity 300ms ease}
+.card:hover .art img{transform:translateY(-1px) scale(1.055)}
+.btn:active,.collect:active,.info:active,.tab:active,.card .status-icon:active,.modal button.close:active{
+ transform:translateY(1px) scale(.975);
+ transition-duration:115ms;
+ box-shadow:0 2px 5px #0005;
+}
+.card:active{transform:translateY(-1px) scale(.996);transition-duration:140ms}
+@media(hover:none){
+ .btn:hover,.collect:hover,.info:hover,.tab:hover,.card .status-icon:hover,.modal button.close:hover,.card:hover,.card:active{
+  transform:none;
+ }
+ .card:hover .art img{transform:none}
+}
+/* Confirmation — in-world dialog instead of browser's native confirm() */
+#confirmHolder:empty{display:none}
+.confirm-back{
+ position:fixed;inset:0;z-index:120;display:grid;place-items:center;
+ padding:20px;background:#030807cb;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+ animation:confirmBackdropIn 250ms ease both;
+}
+.confirm-panel{
+ width:min(520px,100%);max-height:min(690px,90vh);overflow:auto;
+ border:1px solid #9c8a63;border-radius:17px;
+ background:linear-gradient(145deg,#29382e 0%,#1b2920 48%,#111e18 100%);
+ box-shadow:0 28px 85px #000c,0 0 0 1px #c6ac6b21;
+ padding:28px 30px 25px;
+ animation:confirmPanelIn 310ms var(--ui-ease) both;
+}
+.confirm-header{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.confirm-header .eyebrow{letter-spacing:.14em;line-height:1.5}
+.confirm-seal{
+ width:37px;height:37px;flex:none;display:grid;place-items:center;
+ border:1px solid #917c57;border-radius:10px;background:#2d3427;
+ color:#f1d29a;font:25px/1 Georgia,serif;
+}
+.confirm-panel h2{font:normal clamp(27px,4vw,35px)/1.15 Georgia,"Times New Roman",serif;color:#f7e6c3;margin:0 0 12px}
+.confirm-panel p{color:#cbd5c9;font-size:14px;line-height:1.65;margin:0;max-width:44ch}
+.confirm-actions{display:flex;align-items:center;justify-content:flex-end;gap:10px;flex-wrap:wrap;margin-top:26px}
+.confirm-actions .btn{min-height:44px;padding:11px 18px;font-weight:700}
+.confirm-cancel{background:#24352a;border-color:#536a50;color:#dde9db}
+.confirm-danger{background:#7f423c;border-color:#b87967;color:#fff6ef}
+.confirm-danger:hover{background:#9d5648;border-color:#ecc1a8;box-shadow:0 8px 20px #ae604333}
+.confirm-back.is-closing{animation:confirmBackdropOut 170ms ease forwards}
+.confirm-back.is-closing .confirm-panel{animation:confirmPanelOut 170ms ease forwards}
+@keyframes confirmBackdropIn{from{opacity:0}to{opacity:1}}
+@keyframes confirmBackdropOut{from{opacity:1}to{opacity:0}}
+@keyframes confirmPanelIn{from{opacity:0;transform:translateY(15px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes confirmPanelOut{from{opacity:1;transform:translateY(0) scale(1)}to{opacity:0;transform:translateY(8px) scale(.987)}}
+@media(max-width:480px){
+ .confirm-panel{padding:23px 20px 20px;border-radius:14px}
+ .confirm-actions{gap:9px}
+ .confirm-actions .btn{flex:1;min-width:0;padding:10px 12px}
+}
+@media(prefers-reduced-motion:reduce){
+ .btn,.collect,.info,.tab,.card,.card .status-icon,.modal button.close,.art img{
+  transition:none!important;animation:none!important;
+ }
+ .confirm-back,.confirm-panel,.confirm-back.is-closing,.confirm-back.is-closing .confirm-panel{
+  animation:none!important;transition:none!important;
+ }
+}
