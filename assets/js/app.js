@@ -39,8 +39,126 @@ $('#biomeMode').addEventListener('click',()=>setMode('biome'));
 $('#search').addEventListener('input',render);
 $('#biomeFilter').addEventListener('change',render);
 $('#statusFilter').addEventListener('change',render);
-function resetFilters(){$('#search').value='';$('#statusFilter').value='all';$('#biomeFilter').value='all';render()}
-for(let [id,b] of Object.entries(BIOMES)){$('#biomeFilter').add(new Option(b.name,id))}
+function resetFilters(){
+ $('#search').value='';
+ $('#statusFilter').value='all';
+ $('#biomeFilter').value='all';
+ syncCustomDropdowns();
+ render();
+}
+for(const [id,b] of Object.entries(BIOMES)){$('#biomeFilter').add(new Option(b.name,id))}
+
+/* Custom listboxes overlay the toolbar (no native select that scrolls the page).
+   The hidden select remains the single source of truth for existing filters. */
+const customDropdowns=[];
+function setupCustomDropdown(selectId,prefix){
+ const select=document.getElementById(selectId);
+ const wrapper=select?.closest('.filter-dropdown');
+ if(!select||!wrapper)return;
+ const trigger=wrapper.querySelector('.filter-trigger');
+ const label=wrapper.querySelector('.filter-trigger-label');
+ const menu=wrapper.querySelector('.filter-menu');
+ const opts=[...select.options];
+ let activeIndex=Math.max(0,select.selectedIndex);
+ const nodes=opts.map((entry,index)=>{
+  const node=document.createElement('button');
+  node.type='button';
+  node.className='filter-option';
+  node.setAttribute('role','option');
+  node.setAttribute('tabindex','-1');
+  node.id=selectId+'-option-'+index;
+  node.dataset.value=entry.value;
+  node.textContent=entry.text;
+  menu.append(node);
+  return node;
+ });
+ const isOpen=()=>!menu.hidden;
+ const sync=()=>{
+  const selected=opts.find(o=>o.value===select.value)||opts[0];
+  label.textContent=selected.text;
+  trigger.setAttribute('aria-label',prefix+': '+selected.text);
+  nodes.forEach((node,index)=>{
+   const on=opts[index].value===selected.value;
+   node.setAttribute('aria-selected',String(on));
+   node.classList.toggle('is-selected',on);
+  });
+  activeIndex=Math.max(0,opts.findIndex(o=>o.value===selected.value));
+ };
+ const close=(focusTrigger=false)=>{
+  if(!isOpen())return;
+  menu.hidden=true;
+  wrapper.classList.remove('is-open');
+  trigger.setAttribute('aria-expanded','false');
+  if(focusTrigger)trigger.focus({preventScroll:true});
+ };
+ const moveFocus=(index)=>{
+  activeIndex=(index+nodes.length)%nodes.length;
+  const node=nodes[activeIndex];
+  node.focus({preventScroll:true});
+  /* Scroll only the popup itself when using arrow keys, never the page. */
+  const y=node.offsetTop-menu.offsetTop;
+  if(y<menu.scrollTop)menu.scrollTop=y;
+  else if(y+node.offsetHeight>menu.scrollTop+menu.clientHeight)
+   menu.scrollTop=y+node.offsetHeight-menu.clientHeight;
+ };
+ const open=(focusIndex=null)=>{
+  customDropdowns.forEach(other=>{if(other.close!==close)other.close()});
+  sync();
+  menu.hidden=false;
+  wrapper.classList.add('is-open');
+  trigger.setAttribute('aria-expanded','true');
+  if(focusIndex!==null)moveFocus(focusIndex);
+ };
+ const selectOption=index=>{
+  if(index<0||index>=opts.length)return;
+  const next=opts[index].value;
+  if(select.value!==next){
+   select.value=next;
+   select.dispatchEvent(new Event('change',{bubbles:true}));
+  }
+  sync();
+  close(true);
+ };
+ trigger.addEventListener('click',()=>{if(isOpen())close();else open()});
+ trigger.addEventListener('keydown',event=>{
+  if(event.key==='ArrowDown'||event.key==='ArrowUp'){
+   event.preventDefault();
+   open(Math.max(0,select.selectedIndex)+(event.key==='ArrowDown'?1:-1));
+  }else if(event.key==='Escape'&&isOpen()){
+   event.preventDefault();close(true);
+  }
+ });
+ menu.addEventListener('click',event=>{
+  const node=event.target.closest('.filter-option');
+  if(node)selectOption(nodes.indexOf(node));
+ });
+ menu.addEventListener('keydown',event=>{
+  let target=null;
+  switch(event.key){
+   case 'ArrowDown':target=activeIndex+1;break;
+   case 'ArrowUp':target=activeIndex-1;break;
+   case 'Home':target=0;break;
+   case 'End':target=nodes.length-1;break;
+   case 'Enter':case ' ':
+    event.preventDefault();selectOption(activeIndex);return;
+   case 'Escape':
+    event.preventDefault();close(true);return;
+   case 'Tab':close();return;
+   default:return;
+  }
+  event.preventDefault();
+  moveFocus(target);
+ });
+ document.addEventListener('pointerdown',event=>{
+  if(isOpen()&&!wrapper.contains(event.target))close();
+ });
+ select.addEventListener('change',sync);
+ customDropdowns.push({sync,close});
+ sync();
+}
+function syncCustomDropdowns(){customDropdowns.forEach(dropdown=>dropdown.sync())}
+setupCustomDropdown('biomeFilter','Биом');
+setupCustomDropdown('statusFilter','Статус');
 /**
  * Accessible in-page confirmation, styled like the trophy detail panel.
  * The caller receives a boolean and never changes stored progress on cancel.
