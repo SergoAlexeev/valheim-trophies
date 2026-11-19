@@ -702,3 +702,26 @@ html{scroll-padding-top:110px}
     overflow-y:auto;
   }
 }
+
+/* v2.7 — compact masthead metadata, two right-aligned lines */
+.topbar .logo{min-width:0}
+.topbar .version{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;
+  justify-content:center;
+  flex:0 0 auto;
+  gap:3px;
+  min-width:0;
+  text-align:right;
+  line-height:1.35;
+  white-space:nowrap;
+  font-variant-numeric:tabular-nums;
+}
+.topbar .version span{display:block}
+@media(max-width:390px){
+  .topbar{gap:8px}
+  .topbar .logo{gap:9px}
+  .topbar .version{font-size:10px}
+  .topbar .brand-small{letter-spacing:.13em;font-size:9px}
+}
