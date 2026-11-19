@@ -290,3 +290,16 @@ html{scroll-padding-top:110px}
 }
 .filters-sticky-trigger{display:block;height:0;pointer-events:none}
 @media(max-width:770px){.filters-sticky{top:0}}
+
+/* v2.1 — sticky toolbar shadow */
+.filters-sticky .toolbar{
+  transition:box-shadow 320ms cubic-bezier(.22,1,.36,1),
+             border-radius 260ms ease;
+}
+.filters-sticky.is-stuck .toolbar{
+  box-shadow:0 17px 29px rgba(0,0,0,.58),
+             0 9px 23px rgba(132,194,145,.17);
+}
+@media(prefers-reduced-motion:reduce){
+  .filters-sticky .toolbar{transition:none}
+}
