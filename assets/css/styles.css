@@ -202,3 +202,19 @@
 @media(prefers-reduced-motion:reduce){
   .drop-explain{scroll-behavior:auto}
 }
+
+/* v1.8 — sticky filters: the SECTION must stick, not its short child toolbar */
+.filters-sticky{
+  position:sticky;
+  top:calc(8px + env(safe-area-inset-top, 0px));
+  z-index:60;
+  width:100%;
+  isolation:isolate;
+}
+.filters-sticky .toolbar{position:relative;top:auto;z-index:auto}
+html{scroll-padding-top:110px}
+@media(max-width:770px){
+  .filters-sticky{top:env(safe-area-inset-top, 0px)}
+  .filters-sticky .toolbar{top:auto}
+  html{scroll-padding-top:215px}
+}
