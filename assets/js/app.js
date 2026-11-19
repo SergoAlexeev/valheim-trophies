@@ -122,6 +122,23 @@ $('#importBtn').addEventListener('click',()=>$('#importFile').click());
 $('#importFile').addEventListener('change',async e=>{let file=e.target.files[0];if(!file)return;e.target.value='';if(file.size>200000){notify('Файл слишком большой');return}try{let parsed=JSON.parse(await file.text());let ids=Array.isArray(parsed)?parsed:parsed.collected;if(!Array.isArray(ids)||ids.length>200){throw Error('Неверный формат файла')}const allowed=new Set(TROPHIES.map(t=>t.id));let clean=[...new Set(ids.filter(id=>typeof id==='string'&&allowed.has(id)))];if(!await requestConfirmation({title:'Загрузить сохранение?',message:'Текущая коллекция будет заменена данными из файла ('+clean.length+' трофеев). При необходимости сначала сохрани текущий прогресс.',confirmText:'Заменить коллекцию'}))return;saved=new Set(clean);persist();render();notify('Загружено трофеев: '+clean.length)}catch(err){notify('Не удалось прочитать файл прогресса')}});
 render();
 
+/* Switch the top border and corner radius only while the sticky toolbar touches the viewport top.
+   A zero-height marker records its normal document position without shifting the page. */
+const filterPanel=document.querySelector('.filters-sticky');
+if(filterPanel){
+ const marker=document.createElement('span');
+ marker.className='filters-sticky-trigger';
+ marker.setAttribute('aria-hidden','true');
+ filterPanel.before(marker);
+ const syncFilterDock=()=>{
+  const isDocked=marker.getBoundingClientRect().top<=0 && window.scrollY>0;
+  filterPanel.classList.toggle('is-stuck',isDocked);
+ };
+ window.addEventListener('scroll',syncFilterDock,{passive:true});
+ window.addEventListener('resize',syncFilterDock,{passive:true});
+ syncFilterDock();
+}
+
 /* Installable static site: works in browsers without service-worker support. */
 let installPromptEvent=null;
 window.addEventListener('beforeinstallprompt', event=>{
