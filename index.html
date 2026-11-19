@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#141a18">
 <title>Зал трофеев Valheim — русский тир-лист и коллекция</title>
 <meta name="description" content="Русский тир-лист всех 69 трофеев Valheim: биомы, изображения, шансы выпадения и учёт коллекции с сохранением прогресса.">
-<link rel="stylesheet" href="./assets/css/styles.css">
+<link rel="stylesheet" href="./assets/css/styles.css?v=13">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="ru_RU">
 <meta property="og:title" content="Зал трофеев Valheim — русский тир-лист">
@@ -27,11 +27,11 @@
  <section class="hero"><div><div class="eyebrow">Коллекция трофеев · Русская версия</div><h1>Зал <span>трофеев</span></h1><p class="lead">Собери головы врагов со всего десятого мира. Отмечай найденное, изучай биомы и шансы выпадения — от обычных трофеев до редчайших добыч</p><div class="hero-actions"><button class="btn primary" id="exportBtn" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v12m-5-5 5 5 5-5M4 17v4h16v-4"/></svg>Сохранить прогресс</button><button class="btn" id="importBtn" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21V9m-5 5 5-5 5 5M4 7V3h16v4"/></svg>Загрузить прогресс</button><button class="btn quiet" id="resetBtn" type="button">Сбросить отметки</button><button class="btn quiet" id="installBtn" type="button" hidden>Установить сайт</button><input id="importFile" type="file" hidden accept=".json,application/json"></div></div><div class="progresscard" aria-live="polite"><div class="progress-label">ТВОЯ КОЛЛЕКЦИЯ</div><div class="progress-main"><span id="foundCount">0</span> <small>/ 69</small></div><div class="progress-bar"><div id="progressFill"></div></div><div class="progress-caption"><span>Найдено трофеев</span><strong id="progressPct">0%</strong></div></div></section>
  <div class="statline" aria-label="Сводка коллекции"><div class="stat"><strong id="missingStat">69</strong><span>Ещё предстоит найти</span></div><div class="stat"><strong id="rareStat">0 / 16</strong><span>Редкие трофеи S</span></div><div class="stat"><strong id="bossStat">0 / 7</strong><span>Трофеи главных боссов</span></div></div>
  <section class="filters-sticky" aria-label="Фильтры коллекции"><div class="toolbar"><div class="tabs" role="group" aria-label="Вид коллекции"><button class="tab" id="tierMode" type="button" aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16M4 10h16M4 15h16M4 20h10"/></svg>Тир-лист</button><button class="tab" id="biomeMode" type="button" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21v-8M12 15c-5 0-8-3-8-7 4 0 7 2 8 5M12 15c5 0 8-3 8-7-4 0-7 2-8 5"/></svg>По биомам</button></div><label class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg><input id="search" type="search" placeholder="Найти трофей или существо…" autocomplete="off" aria-label="Поиск трофеев"></label><div class="filter-dropdown" data-filter="biomeFilter">
-  <select id="biomeFilter" hidden aria-label="Фильтр по биому"><option value="all">Все биомы</option></select>
+  <select id="biomeFilter" aria-label="Фильтр по биому"><option value="all">Все биомы</option></select>
   <button class="filter-trigger" type="button" id="biomeFilterTrigger" aria-label="Биом: Все биомы" aria-haspopup="listbox" aria-expanded="false" aria-controls="biomeFilterList"><span class="filter-trigger-label">Все биомы</span><svg class="filter-chevron" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></button>
   <div class="filter-menu" id="biomeFilterList" role="listbox" aria-label="Выбор биома" hidden></div>
  </div><div class="filter-dropdown" data-filter="statusFilter">
-  <select id="statusFilter" hidden aria-label="Фильтр по наличию"><option value="all">Все трофеи</option><option value="missing">Ещё не найденные</option><option value="found">Уже найденные</option><option value="boss">Главные боссы</option></select>
+  <select id="statusFilter" aria-label="Фильтр по наличию"><option value="all">Все трофеи</option><option value="missing">Ещё не найденные</option><option value="found">Уже найденные</option><option value="boss">Главные боссы</option></select>
   <button class="filter-trigger" type="button" id="statusFilterTrigger" aria-label="Статус: Все трофеи" aria-haspopup="listbox" aria-expanded="false" aria-controls="statusFilterList"><span class="filter-trigger-label">Все трофеи</span><svg class="filter-chevron" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></button>
   <div class="filter-menu" id="statusFilterList" role="listbox" aria-label="Выбор статуса трофеев" hidden></div>
  </div><span class="count" id="filterCount">Показано: 69</span></div></section>
@@ -40,6 +40,6 @@
  <footer class="foot"><div>Неофициальный фанатский проект · Valheim © Iron Gate AB<br><span class="muted">Не связан с Iron Gate AB и Coffee Stain Publishing AB</span></div><div><a href="./sources.html">Источники и права</a><a href="https://github.com/SergoAlexeev/valheim-trophies" target="_blank" rel="noopener noreferrer">GitHub</a></div></footer>
 </div>
 <div id="modalHolder"></div><div id="confirmHolder"></div><div id="toast" role="status" class="toast hide"></div>
-<script src="./assets/js/app.js" defer></script>
+<script src="./assets/js/app.js?v=13" defer></script>
 </body>
 </html>

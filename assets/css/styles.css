@@ -450,3 +450,28 @@ html{scroll-padding-top:110px}
   .search,.search input,.search svg{transition:none!important}
   .toolbar .filter-menu{animation:none!important}
 }
+
+/* v2.3 — progressive enhancement: keep native filters usable if assets are out of sync */
+.toolbar .filter-dropdown:not(.is-enhanced)>.filter-trigger,
+.toolbar .filter-dropdown:not(.is-enhanced)>.filter-menu{display:none!important}
+.toolbar .filter-dropdown:not(.is-enhanced)>select{
+ display:block!important;
+ width:100%;
+ height:46px;
+ min-height:46px;
+ max-width:none;
+ border-radius:9px;
+ background-color:#111914;
+ color:#e9eee4;
+ cursor:pointer;
+}
+.toolbar .filter-dropdown:not(.is-enhanced)>select:hover{
+ border-color:#829b7d;
+ background-color:#19291e;
+ box-shadow:0 5px 14px #0005;
+}
+.toolbar .filter-dropdown:not(.is-enhanced)>select:focus-visible{
+ border-color:#c9bd91;
+ box-shadow:0 0 0 2px #d9bd7861;
+}
+.toolbar .filter-dropdown.is-enhanced>select{display:none!important}

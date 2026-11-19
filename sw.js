@@ -1,6 +1,6 @@
 /* Static shell cache. Third-party trophy images load from the source site. */
-const SHELL_CACHE='valheim-trophy-hall-v12';
-const SHELL=['./','./index.html','./sources.html','./assets/css/styles.css','./assets/js/app.js','./assets/icons/favicon.svg','./assets/icons/icon-192.png','./assets/icons/icon-512.png','./manifest.webmanifest'];
+const SHELL_CACHE='valheim-trophy-hall-v13';
+const SHELL=['./','./index.html','./sources.html','./assets/css/styles.css?v=13','./assets/js/app.js?v=13','./assets/icons/favicon.svg','./assets/icons/icon-192.png','./assets/icons/icon-512.png','./manifest.webmanifest'];
 self.addEventListener('install',event=>{
   event.waitUntil(caches.open(SHELL_CACHE).then(cache=>cache.addAll(SHELL)).then(()=>self.skipWaiting()));
 });

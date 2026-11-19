@@ -155,6 +155,8 @@ function setupCustomDropdown(selectId,prefix){
  select.addEventListener('change',sync);
  customDropdowns.push({sync,close});
  sync();
+ // Keep native selects operable until every custom control is ready.
+ wrapper.classList.add('is-enhanced');
 }
 function syncCustomDropdowns(){customDropdowns.forEach(dropdown=>dropdown.sync())}
 setupCustomDropdown('biomeFilter','Биом');
