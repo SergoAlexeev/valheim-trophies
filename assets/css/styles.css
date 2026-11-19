@@ -475,3 +475,77 @@ html{scroll-padding-top:110px}
  box-shadow:0 0 0 2px #d9bd7861;
 }
 .toolbar .filter-dropdown.is-enhanced>select{display:none!important}
+
+/* v2.4 — mobile actions and six balanced rarity tiers */
+@media(max-width:770px){
+  /* Two full-width primary rows followed by paired secondary actions */
+  .hero-actions{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:10px;
+    align-items:stretch;
+    margin-top:24px;
+  }
+  .hero-actions>.btn{
+    width:100%;
+    min-width:0;
+    min-height:49px;
+    padding:11px 13px;
+    line-height:1.25;
+    text-align:center;
+    white-space:normal;
+  }
+  .hero-actions>#exportBtn,
+  .hero-actions>#importBtn{
+    grid-column:1 / -1;
+    justify-content:center;
+  }
+  .hero-actions>#resetBtn,
+  .hero-actions>#installBtn{
+    grid-column:auto;
+    min-height:47px;
+    padding-inline:8px;
+    font-size:clamp(12px,3.6vw,14px);
+  }
+  /* If PWA installation isn't offered, fill the otherwise empty third row. */
+  .hero-actions>#resetBtn:has(+ #installBtn[hidden]){
+    grid-column:1 / -1;
+  }
+  /* Stable and symmetrical 3 x 2 arrangement instead of a stranded last pill. */
+  .legend{
+    display:grid;
+    grid-template-columns:minmax(0,1fr);
+    gap:12px;
+    margin:19px 0 22px;
+  }
+  .legend-keys{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:8px;
+    width:100%;
+  }
+  .legend .pill{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    width:100%;
+    min-width:0;
+    min-height:39px;
+    padding:7px 6px;
+    gap:6px;
+    font-size:12px;
+    line-height:1.2;
+    white-space:nowrap;
+  }
+  .legend .pill b{flex:none}
+  .legend>div:last-child{
+    text-align:center;
+    line-height:1.5;
+    font-size:12px;
+    padding:0 5px;
+  }
+}
+@media(max-width:340px){
+  .legend-keys{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .hero-actions>#resetBtn,.hero-actions>#installBtn{font-size:12px;padding-inline:6px}
+}
