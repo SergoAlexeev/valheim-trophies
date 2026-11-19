@@ -1,0 +1,16 @@
+{
+  "id": "./",
+  "name": "Зал трофеев Valheim",
+  "short_name": "Трофеи Valheim",
+  "description": "Русскоязычный список трофеев Valheim с отслеживанием прогресса",
+  "lang": "ru-RU",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0b1110",
+  "theme_color": "#141a18",
+  "icons": [
+    {"src":"./assets/icons/icon-192.png","sizes":"192x192","type":"image/png","purpose":"any maskable"},
+    {"src":"./assets/icons/icon-512.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}
+  ]
+}

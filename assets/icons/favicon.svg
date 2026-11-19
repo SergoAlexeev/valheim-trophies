@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Зал трофеев">
+<defs><linearGradient id="bg" x1="0" x2="1" y2="1"><stop stop-color="#29392f"/><stop offset="1" stop-color="#101714"/></linearGradient><linearGradient id="gold" x2=".65" y2="1"><stop stop-color="#f5dfad"/><stop offset="1" stop-color="#aa8246"/></linearGradient></defs>
+<rect width="128" height="128" rx="28" fill="url(#bg)"/>
+<path d="M64 13L106 34v36q0 27-42 47Q22 97 22 70V34Z" fill="#19231c" stroke="url(#gold)" stroke-width="5"/>
+<path d="M64 35v52M42 42l22 22 22-22M42 83l22-19 22 19" stroke="#dfbf82" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+<circle cx="64" cy="65" r="5" fill="#e9d19d"/>
+</svg>
