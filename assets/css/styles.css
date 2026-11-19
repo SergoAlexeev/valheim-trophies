@@ -181,3 +181,24 @@
   animation:none!important;transition:none!important;
  }
 }
+
+/* v1.6: keep the trophy modal stable while the drop-rate explanation expands. */
+.drop-explain{
+  height:156px;
+  overflow-y:auto;
+  overflow-x:hidden;
+  overscroll-behavior-y:contain;
+  scrollbar-width:thin;
+  scrollbar-color:#789579 #1b2c22;
+  scroll-behavior:smooth;
+}
+.drop-explain::-webkit-scrollbar{width:7px}
+.drop-explain::-webkit-scrollbar-track{background:#1b2c22;border-radius:8px}
+.drop-explain::-webkit-scrollbar-thumb{background:#789579;border-radius:8px;border:1px solid #1b2c22}
+.drop-explain details{padding-bottom:3px}
+@media(max-width:480px){
+  .drop-explain{height:180px}
+}
+@media(prefers-reduced-motion:reduce){
+  .drop-explain{scroll-behavior:auto}
+}
