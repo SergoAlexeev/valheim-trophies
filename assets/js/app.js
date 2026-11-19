@@ -41,10 +41,85 @@ $('#biomeFilter').addEventListener('change',render);
 $('#statusFilter').addEventListener('change',render);
 function resetFilters(){$('#search').value='';$('#statusFilter').value='all';$('#biomeFilter').value='all';render()}
 for(let [id,b] of Object.entries(BIOMES)){$('#biomeFilter').add(new Option(b.name,id))}
-$('#resetBtn').addEventListener('click',()=>{if(!saved.size){notify('Коллекция уже пуста');return}if(confirm('Удалить все '+saved.size+' отметок о найденных трофеях? Сначала можно сохранить прогресс в файл.')){saved.clear();persist();render();notify('Все отметки сброшены')}});
+/**
+ * Accessible in-page confirmation, styled like the trophy detail panel.
+ * The caller receives a boolean and never changes stored progress on cancel.
+ */
+function requestConfirmation({title,message,confirmText,destructive=false}){
+ return new Promise(resolve=>{
+  const host=$('#confirmHolder');
+  if(!host||host.firstChild){resolve(false);return}
+  const previouslyFocused=document.activeElement;
+  const previousOverflow=document.body.style.overflow;
+  host.innerHTML=`<div class="confirm-back" id="confirmOverlay">
+   <section class="confirm-panel" role="${destructive?'alertdialog':'dialog'}" aria-modal="true" aria-labelledby="confirmTitle" aria-describedby="confirmMessage">
+    <div class="confirm-header"><span class="confirm-seal" aria-hidden="true">ᛟ</span><span class="eyebrow">Зал трофеев · Подтверждение</span></div>
+    <h2 id="confirmTitle">${escapeHtml(title)}</h2>
+    <p id="confirmMessage">${escapeHtml(message)}</p>
+    <div class="confirm-actions">
+     <button type="button" class="btn confirm-cancel" id="confirmCancel">Отмена</button>
+     <button type="button" class="btn ${destructive?'confirm-danger':'primary'}" id="confirmAccept">${escapeHtml(confirmText)}</button>
+    </div>
+   </section>
+  </div>`;
+  const overlay=$('#confirmOverlay');
+  const cancel=$('#confirmCancel');
+  const accept=$('#confirmAccept');
+  let closing=false,removed=false;
+  const cleanUp=(value)=>{
+   if(removed)return;
+   removed=true;
+   host.replaceChildren();
+   document.body.style.overflow=previousOverflow;
+   if(previouslyFocused?.isConnected&&typeof previouslyFocused.focus==='function')previouslyFocused.focus();
+   resolve(value);
+  };
+  const finish=(value)=>{
+   if(closing)return;
+   closing=true;
+   document.removeEventListener('keydown',onKeydown,true);
+   overlay.classList.add('is-closing');
+   if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){cleanUp(value);return}
+   const fallback=window.setTimeout(()=>cleanUp(value),230);
+   overlay.addEventListener('animationend',event=>{
+    if(event.target!==overlay)return;
+    window.clearTimeout(fallback);
+    cleanUp(value);
+   },{once:true});
+  };
+  const onKeydown=(event)=>{
+   if(event.key==='Escape'){event.preventDefault();event.stopPropagation();finish(false);return}
+   if(event.key==='Tab'){
+    const first=cancel,last=accept;
+    if(event.shiftKey&&(document.activeElement===first||!overlay.contains(document.activeElement))){
+     event.preventDefault();last.focus();
+    }else if(!event.shiftKey&&(document.activeElement===last||!overlay.contains(document.activeElement))){
+     event.preventDefault();first.focus();
+    }
+   }
+  };
+  cancel.addEventListener('click',()=>finish(false));
+  accept.addEventListener('click',()=>finish(true));
+  overlay.addEventListener('click',event=>{if(event.target===overlay)finish(false)});
+  document.body.style.overflow='hidden';
+  document.addEventListener('keydown',onKeydown,true);
+  cancel.focus();
+ });
+}
+$('#resetBtn').addEventListener('click',async()=>{
+ if(!saved.size){notify('Коллекция уже пуста');return}
+ const approved=await requestConfirmation({
+  title:'Сбросить коллекцию?',
+  message:'Будут удалены все отметки о найденных трофеях ('+saved.size+'). Это действие нельзя отменить. Перед удалением можно сохранить прогресс в файл.',
+  confirmText:'Удалить отметки',
+  destructive:true
+ });
+ if(!approved)return;
+ saved.clear();persist();render();notify('Все отметки сброшены');
+});
 $('#exportBtn').addEventListener('click',()=>{const payload={app:'valheim-trophy-hall',formatVersion:1,gameVersion:'1.0.21',exportedAt:new Date().toISOString(),collected:[...saved]};let blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json;charset=utf-8'});const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='valheim-trophies-'+new Date().toISOString().slice(0,10)+'.json';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),4000);notify('Файл прогресса подготовлен')});
 $('#importBtn').addEventListener('click',()=>$('#importFile').click());
-$('#importFile').addEventListener('change',async e=>{let file=e.target.files[0];if(!file)return;e.target.value='';if(file.size>200000){notify('Файл слишком большой');return}try{let parsed=JSON.parse(await file.text());let ids=Array.isArray(parsed)?parsed:parsed.collected;if(!Array.isArray(ids)||ids.length>200){throw Error('Неверный формат файла')}const allowed=new Set(TROPHIES.map(t=>t.id));let clean=[...new Set(ids.filter(id=>typeof id==='string'&&allowed.has(id)))];if(!confirm('Заменить текущие отметки загруженной коллекцией ('+clean.length+' трофеев)?'))return;saved=new Set(clean);persist();render();notify('Загружено трофеев: '+clean.length)}catch(err){notify('Не удалось прочитать файл прогресса')}});
+$('#importFile').addEventListener('change',async e=>{let file=e.target.files[0];if(!file)return;e.target.value='';if(file.size>200000){notify('Файл слишком большой');return}try{let parsed=JSON.parse(await file.text());let ids=Array.isArray(parsed)?parsed:parsed.collected;if(!Array.isArray(ids)||ids.length>200){throw Error('Неверный формат файла')}const allowed=new Set(TROPHIES.map(t=>t.id));let clean=[...new Set(ids.filter(id=>typeof id==='string'&&allowed.has(id)))];if(!await requestConfirmation({title:'Загрузить сохранение?',message:'Текущая коллекция будет заменена данными из файла ('+clean.length+' трофеев). При необходимости сначала сохрани текущий прогресс.',confirmText:'Заменить коллекцию'}))return;saved=new Set(clean);persist();render();notify('Загружено трофеев: '+clean.length)}catch(err){notify('Не удалось прочитать файл прогресса')}});
 render();
 
 /* Installable static site: works in browsers without service-worker support. */
