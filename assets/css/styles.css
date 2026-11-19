@@ -218,3 +218,65 @@ html{scroll-padding-top:110px}
   .filters-sticky .toolbar{top:auto}
   html{scroll-padding-top:215px}
 }
+
+/* v1.9: stable card outlines and desktop modal without a main scrollbar */
+/* A normal trophy keeps its original fine 1px border.
+   For collected items, paint a second 2px stroke OVER the image,
+   inset within the existing card box so no grid geometry changes. */
+.card:not(.found) .status-icon{border-width:1px}
+.card.found{
+ border-color:#a5edb3;
+ box-shadow:0 0 19px #79d59336;
+}
+.card.found:hover{
+ border-color:#c8ffd0;
+ box-shadow:0 11px 22px #0005,0 0 24px #8ae5a34b;
+}
+.card.found::after{
+ content:"";
+ position:absolute;
+ inset:0;
+ z-index:6;
+ border:2px solid #a5edb3;
+ border-radius:inherit;
+ box-sizing:border-box;
+ pointer-events:none;
+ transition:border-color 260ms ease;
+}
+.card.found:hover::after{border-color:#c8ffd0}
+/* On desktop the outer trophy sheet has a fixed viewport-safe height.
+   Details remain in their own scrollable box, not on the entire sheet. */
+@media(min-width:771px){
+ .modal{
+  height:min(710px, calc(100dvh - 36px));
+  max-height:none;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  padding:20px 24px;
+ }
+ .modal-top{flex:none;margin:3px 44px 0 0}
+ .modal-top h2{margin:5px 0 4px;line-height:1.12}
+ .modal-visuals{flex:none;margin:12px 0 14px;gap:12px}
+ .modal-asset{height:154px}
+ .modal-asset img{height:118px}
+ .modal-asset figcaption{min-height:32px;padding:7px 8px}
+ .modal .kv{flex:none;padding:7px 0;line-height:1.35}
+ .modal .modal-actions{flex:none;margin-top:12px}
+ .modal .modal-actions .btn{padding:9px 14px}
+ .modal .drop-explain{
+  flex:1 1 110px;
+  min-height:72px;
+  height:auto;
+  margin-top:12px;
+ }
+}
+@media(min-width:771px) and (max-height:710px){
+ .modal{height:calc(100dvh - 24px);padding:14px 20px}
+ .modal-visuals{margin:8px 0 10px}
+ .modal-asset{height:122px}
+ .modal-asset img{height:89px}
+ .modal .kv{padding:5px 0}
+ .modal .modal-actions{margin-top:7px}
+ .modal .drop-explain{margin-top:7px;min-height:60px}
+}
