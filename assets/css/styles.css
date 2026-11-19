@@ -64,3 +64,26 @@
  .modal h2{font-size:27px}
  .kv{grid-template-columns:112px minmax(0,1fr);gap:9px}
 }
+
+/* 1.4 — stronger collection state and a distinct, keyboard-accessible checkbox */
+.card{border-width:2px;transition:border-color .18s,transform .18s,background .18s,box-shadow .18s}
+.card.found{border-color:#a5edb3;background:linear-gradient(145deg,#28452f,#1a3024);box-shadow:0 0 0 1px #69b77d88,0 0 19px #79d59336}
+.card.found:hover{border-color:#c8ffd0;box-shadow:0 0 0 1px #85d99a,0 0 24px #8ae5a34b}
+.card .status-icon{
+ position:absolute;top:8px;right:8px;z-index:3;display:flex;align-items:center;justify-content:center;
+ width:32px;height:32px;min-width:32px;padding:0;
+ border:2px solid #718875;border-radius:8px;background:#14211ae8;color:#ecffec;
+ box-shadow:0 1px 5px #0007;cursor:pointer;line-height:0;
+}
+.card .status-icon svg{display:block;flex:none;width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.8;stroke-linecap:round;stroke-linejoin:round}
+.card .status-icon:hover{border-color:#e2efc8;background:#283e2f}
+.card.found .status-icon{background:#b3edbc;color:#17321d;border-color:#e2ffdf}
+.card.found .status-icon:hover{background:#d0f7d4}
+.card .status-icon:focus-visible{outline:2px solid #fff3c0;outline-offset:3px}
+.drop-explain{margin-top:19px;padding:13px 14px;border:1px solid #50664f;border-radius:10px;background:#1b2c22;color:#c4d5c5;font-size:12px;line-height:1.55}
+.drop-explain>strong{color:#e2eccf;font-size:13px}
+.drop-explain p{margin:8px 0 0}
+.drop-explain b{color:#f3dfae}
+.drop-explain details{margin-top:9px}
+.drop-explain summary{color:#e7d5ae;cursor:pointer;list-style-position:inside;font-weight:650}
+.drop-explain details a{display:inline-block;margin-top:8px}
